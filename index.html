@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maciej Zak — Product Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #101826;
+    --paper: #f6f3ed;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --accent-mid: #93c5fd;
+    --muted: #78746f;
+    --border: #ddd8cf;
+    --page-pad: 6vw;
+    --hover-bg: #f0eee8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+  }
+
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 2px; background: var(--accent); width: 0%;
+    z-index: 10000; transition: width 0.08s linear;
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+  .delay-5 { transition-delay: 0.5s; }
+  .delay-6 { transition-delay: 0.6s; }
+
+  /* ── HEADER — dark inverted ── */
+  header {
+    padding: 72px var(--page-pad) 56px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: var(--ink);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-circle {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.07);
+    animation: expandCircle 1.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    opacity: 0; pointer-events: none;
+  }
+  .hc1 { width: 560px; height: 560px; top: -55%; right: -6%; animation-delay: 0s; }
+  .hc2 { width: 360px; height: 360px; top: -25%; right: 9%; animation-delay: 0.2s; }
+  .hc3 { width: 190px; height: 190px; top: -8%; right: 19%; animation-delay: 0.4s; }
+  @keyframes expandCircle {
+    from { opacity: 0; transform: scale(0.3); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: -0.02em; margin-bottom: 14px;
+    position: relative; z-index: 1;
+    color: #fff;
+  }
+  .header-left h1 em { font-style: italic; color: var(--accent); }
+
+  .clip-reveal {
+    clip-path: inset(0 100% 0 0);
+    animation: clipReveal 1s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .clip-reveal-2 {
+    clip-path: inset(0 100% 0 0);
+    animation: clipReveal 1s 0.45s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  @keyframes clipReveal { to { clip-path: inset(0 0% 0 0); } }
+
+  .header-summary {
+    font-size: 0.95rem; color: rgba(255,255,255,0.55); font-weight: 300;
+    max-width: 520px; line-height: 1.7;
+    opacity: 0; animation: fadeUp 0.8s 0.65s cubic-bezier(0.16,1,0.3,1) forwards;
+    position: relative; z-index: 1;
+    margin-bottom: 24px;
+  }
+  .header-summary strong { color: #fff; font-weight: 500; }
+
+  /* Contact row — horizontal, sits under summary */
+  .header-contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 20px;
+    opacity: 0; animation: fadeUp 0.8s 0.78s cubic-bezier(0.16,1,0.3,1) forwards;
+    position: relative; z-index: 1;
+  }
+  .header-contact .role-badge-inline {
+    display: inline-block;
+    background: var(--accent); color: #fff;
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 12px;
+    position: relative; overflow: hidden;
+  }
+  .header-contact .role-badge-inline::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    transform: translateX(-100%);
+    animation: shimmer 2s 1.3s ease forwards;
+  }
+  .header-contact a {
+    color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.83rem;
+    transition: color 0.2s; position: relative;
+  }
+  .header-contact a::after {
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 0.25s;
+  }
+  .header-contact a:hover { color: #fff; }
+  .header-contact a:hover::after { width: 100%; }
+  .header-contact .contact-sep {
+    width: 1px; height: 12px;
+    background: rgba(255,255,255,0.15);
+    display: inline-block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Photo column — right side of header, bottom-aligned */
+  .header-right {
+    position: relative; z-index: 1;
+    opacity: 0; animation: fadeUp 0.8s 0.45s cubic-bezier(0.16,1,0.3,1) forwards;
+    display: flex; align-items: flex-end; justify-content: flex-end;
+    align-self: stretch;
+    padding-bottom: 0;
+  }
+
+  /* Placeholder shown before photo added */
+  .header-photo-placeholder {
+    width: clamp(160px, 20vw, 260px);
+    min-height: 300px;
+    border: 2px dashed rgba(255,255,255,0.12);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-align: center; padding: 24px;
+    align-self: flex-end;
+  }
+  .header-photo-placeholder .ph-icon { font-size: 2.4rem; opacity: 0.25; }
+
+  /*
+    HOW TO ADD YOUR PHOTO:
+    1. Place your photo PNG/JPG (ideally with a transparent/dark background,
+       or a plain portrait shot) in the same folder as this HTML file.
+    2. Replace the .header-photo-placeholder div below in the HTML with:
+         <div class="header-photo">
+           <img src="maciek-photo.png" alt="Maciek Zak">
+         </div>
+    3. For the best "pop out" effect: use a PNG with a transparent background,
+       OR a photo taken against a plain dark/neutral wall.
+       The CSS applies a thick white drop-shadow outline that traces around
+       the subject, giving a strong silhouette-pop effect.
+  */
+  .header-photo {
+    width: 400px;                 /* ← change this to make wider/narrower */
+    margin-bottom: -56px;         /* ← negative = bleeds below header border. 0 = flush */
+    margin-right: 150px;            /* ← nudge left/right */
+    position: relative;
+  }
+
+  .header-photo img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: top center;
+    filter:
+      drop-shadow(0 0 0px #f6f3ed)
+      drop-shadow(0 0 1px #f6f3ed)
+      drop-shadow(0 0 1px #f6f3ed)
+      drop-shadow(0 0 1px #f6f3ed)
+      drop-shadow(0 0 1px #f6f3ed)
+      drop-shadow(0 0 1px #f6f3ed)
+
+      drop-shadow(0 24px 48px rgba(0,0,0,0.5));
+  }
+
+  /* ── NAV ── */
+  .nav-block {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--ink);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    opacity: 0;
+    animation: fadeUp 0.6s 0.85s ease forwards;
+  }
+
+  .nav-strip { display: flex; overflow-x: auto; }
+  .nav-strip a:first-child { padding-left: var(--page-pad); }
+  .nav-strip a:last-child  { border-right: none; }
+  .nav-strip a {
+    padding: 14px 28px;
+    font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(255,255,255,0.45);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: color 0.22s; white-space: nowrap;
+    position: relative;
+  }
+  .nav-strip a::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
+  }
+  .nav-strip a:hover { color: #fff; }
+  .nav-strip a:hover::after, .nav-strip a.active::after { transform: scaleX(1); }
+  .nav-strip a.active { color: #fff; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    padding: 56px var(--page-pad) 36px;
+    display: flex; align-items: baseline; gap: 18px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem,3vw,2.6rem); font-weight: 700;
+  }
+  .section-header .count {
+    font-size: 0.78rem; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* ── APP CARDS ── */
+  .apps-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .app-card {
+    padding: 48px var(--page-pad);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .app-card:nth-child(even) { border-right: none; }
+  .app-card:nth-child(3), .app-card:nth-child(4) { border-bottom: none; }
+  .app-card:hover { background: var(--hover-bg); }
+
+  .app-card::after {
+    content: ''; pointer-events: none;
+    position: absolute; top: -50%; left: -80%;
+    width: 35%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+    transform: skewX(-15deg); transition: left 0.7s ease;
+  }
+  .app-card:hover::after { left: 160%; }
+
+  .app-card-top { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 22px; }
+
+  .app-icon-wrap {
+    width: 68px; height: 68px; flex-shrink: 0;
+    border-radius: 16px; overflow: visible;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+  }
+  .app-icon-wrap img {
+    width: 68px; height: 68px;
+    object-fit: cover; display: block;
+    border-radius: 16px;
+    clip-path: url(#squircle);
+  }
+  .app-card:hover .app-icon-wrap {
+    transform: scale(1.08);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+  }
+
+  .app-icon-emoji {
+    width: 68px; height: 68px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+  }
+  .app-card:hover .app-icon-emoji {
+    transform: scale(1.08);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+  }
+
+  .upload-zone {
+    width: 68px; height: 68px; border-radius: 16px;
+    background: linear-gradient(135deg,#edeae3,#e4e0d8);
+    flex-shrink: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border: 1.5px dashed #c4c0b8;
+    cursor: pointer; transition: all 0.28s;
+    position: relative; overflow: hidden;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--accent-light); }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-zone .upload-icon { font-size: 1.2rem; line-height: 1; margin-bottom: 2px; }
+  .upload-zone .upload-text { font-size: 0.5rem; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: 0.05em; }
+  .upload-zone.has-image .upload-icon, .upload-zone.has-image .upload-text { display: none; }
+  .upload-zone img.preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: none; }
+  .upload-zone.has-image img.preview { display: block; }
+
+  .app-meta { flex: 1; }
+  .app-status {
+    display: inline-block;
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 500; padding: 3px 9px; border-radius: 20px; margin-bottom: 7px;
+  }
+  .status-live { background: #dbeafe; color: #1e40af; }
+  .status-past { background: #f1f5f9; color: #64748b; }
+
+  .app-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700; line-height: 1.2; margin-bottom: 3px;
+  }
+  .app-genre { font-size: 0.76rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── iPHONE MOCKUPS ── */
+  .mockup-row {
+    display: flex; gap: 14px;
+    margin: 24px 0 28px; align-items: flex-end;
+  }
+  .iphone {
+    flex: 1; max-width: 116px; position: relative;
+    opacity: 0; transform: translateY(18px);
+    transition: opacity 0.5s, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .iphone:nth-child(2) { max-width: 128px; }
+  .app-card.visible .iphone { opacity: 1; transform: translateY(0); }
+  .app-card.visible .iphone:nth-child(1) { transition-delay: 0.18s; }
+  .app-card.visible .iphone:nth-child(2) { transition-delay: 0.30s; }
+  .app-card.visible .iphone:nth-child(3) { transition-delay: 0.42s; }
+  .iphone svg {
+    width: 100%; height: auto; display: block;
+    filter: drop-shadow(0 6px 20px rgba(0,0,0,0.11));
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .app-card:hover .iphone:nth-child(1) svg { transform: translateY(-5px) rotate(-1deg); }
+  .app-card:hover .iphone:nth-child(2) svg { transform: translateY(-9px); }
+  .app-card:hover .iphone:nth-child(3) svg { transform: translateY(-5px) rotate(1deg); }
+
+  .app-description { font-size: 0.92rem; line-height: 1.72; color: var(--muted); margin-bottom: 22px; font-weight: 300; }
+
+  .app-highlights { display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
+  .highlight {
+    display: flex; align-items: flex-start; gap: 11px;
+    font-size: 0.86rem; color: var(--ink); line-height: 1.5;
+    opacity: 0; transform: translateX(-8px);
+    transition: opacity 0.4s, transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .app-card.visible .highlight { opacity: 1; transform: translateX(0); }
+  .app-card.visible .highlight:nth-child(1) { transition-delay: 0.28s; }
+  .app-card.visible .highlight:nth-child(2) { transition-delay: 0.38s; }
+  .app-card.visible .highlight:nth-child(3) { transition-delay: 0.48s; }
+  .app-card.visible .highlight:nth-child(4) { transition-delay: 0.58s; }
+  .highlight::before { content: '→'; color: var(--accent); font-weight: 500; flex-shrink: 0; margin-top: 1px; transition: transform 0.18s; }
+  .highlight:hover::before { transform: translateX(3px); }
+
+  .app-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px; }
+  .tag {
+    font-size: 0.69rem; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 4px 11px; border: 1px solid var(--border);
+    color: var(--muted); font-weight: 500; transition: all 0.2s;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  .app-links { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex; align-items: center;
+    padding: 9px 18px; font-size: 0.76rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; border: none; position: relative; overflow: hidden;
+  }
+  .btn-inner { position: relative; z-index: 1; transition: color 0.28s; }
+  .btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--accent); transform: translateX(-101%);
+    transition: transform 0.32s cubic-bezier(0.16,1,0.3,1);
+  }
+  .btn:hover::before { transform: translateX(0); }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+  .btn-secondary::before { background: var(--accent); }
+  .btn-primary:hover .btn-inner, .btn-secondary:hover .btn-inner { color: var(--paper); }
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .coming-soon { opacity: 0.72; }
+
+  /* ── PM LENS — dark inverted ── */
+  .pm-lens {
+    padding: 72px var(--page-pad);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: var(--ink);
+  }
+  .pm-lens h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.55rem,2.5vw,2.1rem); font-weight: 700; margin-bottom: 7px;
+    color: #fff;
+  }
+  .pm-lens .subtitle { color: rgba(255,255,255,0.45); font-size: 0.88rem; margin-bottom: 44px; font-weight: 300; }
+
+  .lens-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-left: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .lens-cell {
+    padding: 32px 26px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative; overflow: hidden;
+    transition: background 0.28s;
+    background: transparent;
+  }
+  .lens-cell:hover { background: rgba(255,255,255,0.04); }
+  .lens-cell::before {
+    content: ''; position: absolute; left: 0; top: 0;
+    width: 2px; height: 0; background: var(--accent);
+    transition: height 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .lens-cell:hover::before { height: 100%; }
+
+  .lens-cell .icon {
+    font-size: 1.4rem; display: inline-block; margin-bottom: 0;
+    transform: scale(1);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .lens-cell:hover .icon { transform: scale(1.5); }
+  .lens-cell:not(:hover) .icon { transition: transform 0.4s linear; }
+
+  .lens-cell .icon-wrap { display: block; margin-bottom: 14px; }
+
+  .lens-cell h3 {
+    font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 500; margin-bottom: 9px; color: #fff;
+  }
+  .lens-cell p { font-size: 0.86rem; line-height: 1.65; color: rgba(255,255,255,0.45); font-weight: 300; }
+
+  /* ── SECTION DIVIDERS ── */
+  .section-divider {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-divider-inner {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--border) 10%,
+      var(--accent) 35%,
+      var(--border) 65%,
+      transparent 100%);
+    opacity: 0;
+    transform: scaleX(0);
+    transition: opacity 0.6s ease, transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .section-divider.visible .section-divider-inner {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  /* Dot pulse at centre of divider */
+  .section-divider-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.5s 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .section-divider { position: relative; }
+  .section-divider.visible .section-divider-dot {
+    transform: translateX(-50%) scale(1);
+  }
+
+  /* ── COMPANY LOGO COLUMN IN TIMELINE ── */
+  .timeline-item {
+    display: grid; grid-template-columns: 72px 200px 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    transition: background 0.28s;
+  }
+  .timeline-item:hover { background: var(--hover-bg); }
+  .timeline-item::after {
+    content: ''; position: absolute; left: 0; top: 0;
+    width: 2px; height: 0; background: var(--accent);
+    transition: height 0.55s cubic-bezier(0.16,1,0.3,1);
+  }
+  .timeline-item.visible::after { height: 100%; }
+  .timeline-left, .timeline-right { position: relative; z-index: 1; }
+
+  /* Logo cell */
+  .timeline-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+    border-right: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .timeline-logo-wrap {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: #f0ede6;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                box-shadow 0.3s ease;
+  }
+  .timeline-item:hover .timeline-logo-wrap {
+    transform: scale(1.08);
+    box-shadow: 0 5px 16px rgba(0,0,0,0.15);
+  }
+  .timeline-logo-wrap img {
+    width: 44px; height: 44px;
+    object-fit: cover; display: block;
+    clip-path: url(#squircle);
+  }
+  /* Dashed placeholder when no logo supplied */
+  .timeline-logo-placeholder {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: 1.5px dashed #c4c0b8;
+    background: linear-gradient(135deg,#edeae3,#e4e0d8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.55rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    text-align: center; line-height: 1.3;
+    transition: border-color 0.2s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .timeline-item:hover .timeline-logo-placeholder {
+    border-color: var(--accent);
+    transform: scale(1.08);
+  }
+
+  .timeline-left {
+    padding: 28px 20px;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+  }
+  .timeline-left .company { font-weight: 500; font-size: 0.9rem; margin-bottom: 4px; color: var(--ink); }
+  .timeline-left .period { font-size: 0.76rem; color: var(--muted); letter-spacing: 0.04em; }
+  .timeline-right { padding: 28px 0 28px 28px; }
+  .timeline-right .title { font-weight: 500; font-size: 0.93rem; margin-bottom: 6px; }
+  .timeline-right .desc { font-size: 0.84rem; color: var(--muted); line-height: 1.62; font-weight: 300; }
+  .timeline-right .desc-intro { display: block; margin-bottom: 6px; }
+  .timeline-right .desc-detail { display: block; }
+
+  /* ── EXPERIENCE ── */
+  .professional { padding: 72px var(--page-pad); border-bottom: 1px solid var(--border); }
+  .professional h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.55rem,2.5vw,2.1rem); font-weight: 700; margin-bottom: 7px; }
+  .professional .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 44px; font-weight: 300; }
+  .timeline { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+
+  /* ── FOOTER — dark inverted ── */
+  footer {
+    padding: 80px var(--page-pad);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    background: var(--ink);
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center; gap: 40px;
+    position: relative; overflow: hidden;
+  }
+  footer::before {
+    content: "LET'S TALK";
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem,11vw,12rem); font-weight: 900;
+    color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.07);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -52%) scaleX(0.88);
+    white-space: nowrap; pointer-events: none;
+    letter-spacing: -0.02em; opacity: 0;
+    transition: opacity 0.9s, transform 1s cubic-bezier(0.16,1,0.3,1);
+  }
+  footer.visible::before { opacity: 1; transform: translate(-50%, -52%) scaleX(1); }
+  footer .footer-left, footer .footer-right { position: relative; z-index: 1; }
+  footer .footer-left h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; margin-bottom: 7px;
+    color: #fff;
+  }
+  footer .footer-left p { color: rgba(255,255,255,0.45); font-size: 0.88rem; font-weight: 300; }
+  footer .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 11px; }
+  .contact-email {
+    font-size: 0.95rem; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500;
+    position: relative; transition: color 0.2s;
+  }
+  .contact-email::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 0.28s cubic-bezier(0.16,1,0.3,1);
+  }
+  .contact-email:hover { color: #fff; }
+  .contact-email:hover::after { width: 100%; }
+
+  .underline-reveal { position: relative; display: inline; font-weight: 500; color: var(--ink); }
+  .underline-reveal::after {
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 1s 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .underline-reveal.visible::after { width: 100%; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    header { grid-template-columns: 1fr; }
+    .header-right { text-align: left; }
+    .header-right .links { align-items: flex-start; }
+    .apps-grid { grid-template-columns: 1fr; }
+    .app-card { border-right: none; }
+    .app-card:nth-child(3) { border-bottom: 1px solid var(--border); }
+    .lens-grid { grid-template-columns: 1fr 1fr; }
+    .timeline-item { grid-template-columns: 1fr; }
+    .timeline-logo { border-right: none; border-bottom: 1px solid var(--border); padding: 16px 0 12px; justify-content: flex-start; padding-left: var(--page-pad); }
+    .timeline-left { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 0 12px; align-items: flex-start; padding-left: var(--page-pad); }
+    .timeline-right { padding: 14px 0 18px; padding-left: var(--page-pad); }
+    footer { grid-template-columns: 1fr; }
+    footer .footer-right { align-items: flex-start; }
+    .mockup-row { gap: 9px; }
+  }
+  @media (max-width: 480px) {
+    .lens-grid { grid-template-columns: 1fr; }
+    .nav-strip a:first-child { padding-left: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <clipPath id="squircle" clipPathUnits="objectBoundingBox">
+      <path d="M0.5,0 C0.735,0 0.835,0 0.918,0.082 C1,0.165 1,0.265 1,0.5 C1,0.735 1,0.835 0.918,0.918 C0.835,1 0.735,1 0.5,1 C0.265,1 0.165,1 0.082,0.918 C0,0.835 0,0.735 0,0.5 C0,0.265 0,0.165 0.082,0.082 C0.165,0 0.265,0 0.5,0Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<div id="progress-bar"></div>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header>
+  <div class="header-circle hc1"></div>
+  <div class="header-circle hc2"></div>
+  <div class="header-circle hc3"></div>
+  <div class="header-left">
+    <h1>
+      <span class="clip-reveal">Hi, I'm</span><br>
+      <em class="clip-reveal-2">Maciek</em>
+    </h1>
+    <p class="header-summary">
+      I'm a Senior PM specialising in product data, search, and AdTech - with a portfolio of building and shipping mobile games independently. I love taking products from idea to App Store, applying the same rigour I bring to my daily product work: user research, experimentation, data-informed iteration, and a core focus on the end experience.
+    </p>
+    <!-- Contact info — horizontal, under summary -->
+    <div class="header-contact">
+      <span class="role-badge-inline">Open to opportunities</span>
+      <span class="contact-sep"></span>
+      <a href="mailto:maciekzak96@gmail.com">maciekzak96@gmail.com</a>
+      <span class="contact-sep"></span>
+      <a href="https://linkedin.com/in/maciek-zak" target="_blank">LinkedIn ↗</a>
+    </div>
+  </div>
+  <div class="header-right">
+    <!--
+      PHOTO PLACEHOLDER
+      To add your photo:
+        1. Place your image (PNG preferred — ideally with transparent or dark background)
+           in the same folder as this HTML file.
+        2. Replace the .header-photo-placeholder div below with:
+             <div class="header-photo">
+               <img src="maciek-photo.png" alt="Maciek Zak">
+             </div>
+      The layered white drop-shadow will trace around the edges of the subject,
+      making you pop out against the dark header background.
+      For best results: portrait shot, plain/dark background, cropped to head+shoulders or full body.
+    -->
+    <div class="header-photo">
+     <img src="maciek-photo.png" alt="Maciek Zak">
+   </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+<div class="nav-block">
+  <nav class="nav-strip">
+    <a href="#apps"       data-section="apps">Apps</a>
+    <a href="#approach"   data-section="approach">PM Approach</a>
+    <a href="#experience" data-section="experience">Experience</a>
+    <a href="#contact"    data-section="contact">Contact</a>
+  </nav>
+</div>
+
+<!-- ═══════════════════════════ APPS ═══════════════════════════ -->
+<div id="apps" class="section-header reveal">
+  <h2>Shipped Apps</h2>
+  <span class="count">04 projects</span>
+</div>
+
+<div class="apps-grid">
+
+  <!-- ══════════════════════════════════════════════════════
+       DROPLETTS
+  ══════════════════════════════════════════════════════ -->
+  <div class="app-card reveal delay-1">
+    <div class="app-card-top">
+      <div class="app-icon-wrap">
+        <img src="dropletts-icon.png" alt="Dropletts icon">
+      </div>
+      <div class="app-meta">
+        <span class="app-status status-live">Live</span>
+        <div class="app-name">Dropletts</div>
+        <div class="app-genre">Arcade Word Game · 2026</div>
+      </div>
+    </div>
+
+    <div class="mockup-row">
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dframe1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="dclip1"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#dframe1)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#16213e"/>
+          <image href="dropletts-screen1.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#dclip1)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 305" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dframe2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="dclip2"><rect x="10" y="8" width="140" height="287" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="305" rx="26" fill="url(#dframe2)"/>
+          <rect x="10" y="8" width="140" height="287" rx="20" fill="#0d1b3e"/>
+          <image href="dropletts-screen2.png" x="10" y="8" width="140" height="287" preserveAspectRatio="xMidYMid slice" clip-path="url(#dclip2)"/>
+          <rect x="56" y="287" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dframe3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="dclip3"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#dframe3)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#1a1a2e"/>
+          <image href="dropletts-screen3.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#dclip3)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+    </div>
+
+    <p class="app-description">An arcade word game built as an experiment in AI-assisted product development, shipping a fully functioning product using LLMs throughout the entire development cycle, from concept to App Store.</p>
+    <div class="app-highlights">
+      <div class="highlight">Shipped end-to-end using AI-assisted development over a 6-month cycle using prompts only</div>
+      <div class="highlight">Identified optimal prompting strategies to maintain LLM context throughout long development cycles</div>
+      <div class="highlight">Gained hands-on insight into where AI accelerates delivery vs. where human judgement is irreplaceable</div>
+    </div>
+    <div class="app-tags">
+      <span class="tag">AI-assisted dev</span><span class="tag">Codex</span><span class="tag">Unity</span><span class="tag">iOS & Android</span>
+    </div>
+    <div class="app-links">
+      <a href="https://apps.apple.com/us/app/dropletts-arcade-word-game/id6755163781" target="_blank" class="btn btn-primary"><span class="btn-inner">App Store ↗</span></a>
+      <a href="https://play.google.com/store/apps/details?id=com.emzigames.letteris" target="_blank" class="btn btn-secondary"><span class="btn-inner">Google Play ↗</span></a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PINK PENGUIN
+  ══════════════════════════════════════════════════════ -->
+  <div class="app-card reveal delay-2">
+    <div class="app-card-top">
+      <div class="app-icon-wrap">
+        <img src="pinkpenguin-icon.png" alt="Pink Penguin icon">
+      </div>
+      <div class="app-meta">
+        <span class="app-status status-live">Live</span>
+        <div class="app-name">Pink Penguin</div>
+        <div class="app-genre">Puzzle Game · 2024</div>
+      </div>
+    </div>
+
+    <div class="mockup-row">
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ppframe1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="ppclip1"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#ppframe1)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#fff3f8"/>
+          <image href="pinkpenguin-screen1.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#ppclip1)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 305" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ppframe2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="ppclip2"><rect x="10" y="8" width="140" height="287" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="305" rx="26" fill="url(#ppframe2)"/>
+          <rect x="10" y="8" width="140" height="287" rx="20" fill="#ff6b9d"/>
+          <image href="pinkpenguin-screen2.png" x="10" y="8" width="140" height="287" preserveAspectRatio="xMidYMid slice" clip-path="url(#ppclip2)"/>
+          <rect x="56" y="287" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ppframe3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="ppclip3"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#ppframe3)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#fff8fb"/>
+          <image href="pinkpenguin-screen3.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#ppclip3)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+    </div>
+
+    <p class="app-description">A mobile puzzle game independently designed, built, and launched in 6 months. Worked with professional graphic and sound designers to synchronise work and define a vision of the final experience.</p>
+    <div class="app-highlights">
+      <div class="highlight">Featured in Apple App Store 'New Games We Love' in 150+ countries</div>
+      <div class="highlight">Reached Top 10 Paid Puzzle Games on App Store in 22 countries</div>
+      <div class="highlight">Generated £1k revenue; designed, built, and published in 6 months</div>
+    </div>
+    <div class="app-tags">
+      <span class="tag">Level Design</span><span class="tag">C#</span><span class="tag">Unity</span><span class="tag">iOS</span>
+    </div>
+    <div class="app-links">
+      <a href="https://apps.apple.com/gb/app/pink-penguin/id6475698147" target="_blank" class="btn btn-primary"><span class="btn-inner">App Store ↗</span></a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       HOT DOT
+  ══════════════════════════════════════════════════════ -->
+  <div class="app-card coming-soon reveal delay-3">
+    <div class="app-card-top">
+      <div class="app-icon-wrap">
+        <img src="hotdot-icon.png" alt="Hot Dot icon">
+      </div>
+      <div class="app-meta">
+        <span class="app-status status-past">Past project</span>
+        <div class="app-name">Hot Dot!</div>
+        <div class="app-genre">Hypercasual Game · 2019</div>
+      </div>
+    </div>
+    <div class="mockup-row">
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hdframe1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="hdclip1"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#hdframe1)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#1a1a1a"/>
+          <image href="hotdot-screen1.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#hdclip1)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 305" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hdframe2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="hdclip2"><rect x="10" y="8" width="140" height="287" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="305" rx="26" fill="url(#hdframe2)"/>
+          <rect x="10" y="8" width="140" height="287" rx="20" fill="#1a1a1a"/>
+          <image href="hotdot-screen2.png" x="10" y="8" width="140" height="287" preserveAspectRatio="xMidYMid slice" clip-path="url(#hdclip2)"/>
+          <rect x="56" y="287" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hdframe3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="hdclip3"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#hdframe3)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#1a1a1a"/>
+          <image href="hotdot-screen3.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#hdclip3)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+    </div>
+    <p class="app-description">A hypercasual game with a goal of understanding and leveraging game polish and marketing to gain visibility.</p>
+    <div class="app-highlights">
+      <div class="highlight">Ideated, sketched and prototyped unique game mechanic by researching current hyper-casual games and game design principles</div>
+      <div class="highlight">Ran user surveys and beta testing to iterate on UX based on qualitative and quantitative feedback</div>
+      <div class="highlight">Promoted game by learning about advertising strategies and utilising storytelling to gain an Apple App Store feature</div>
+      <div class="highlight">Featured on the Apple App Store 'New Games We Love' section in over 100 countries - 15k downloads</div>
+    </div>
+    <div class="app-tags">
+      <span class="tag">C#</span>
+      <span class="tag">Unity</span>
+      <span class="tag">iOS</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SCOOP HOOP
+  ══════════════════════════════════════════════════════ -->
+  <div class="app-card coming-soon reveal delay-4">
+    <div class="app-card-top">
+      <div class="app-icon-wrap">
+        <img src="scoophoop-icon.png" alt="Scoop Hoop icon">
+      </div>
+      <div class="app-meta">
+        <span class="app-status status-past">Past project</span>
+        <div class="app-name">Scoop Hoop</div>
+        <div class="app-genre">Hypercasual Game · 2019</div>
+      </div>
+    </div>
+    <div class="mockup-row">
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shframe1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="shclip1"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#shframe1)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#1a1a1a"/>
+          <image href="scoophoop-screen1.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#shclip1)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 305" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shframe2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="shclip2"><rect x="10" y="8" width="140" height="287" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="305" rx="26" fill="url(#shframe2)"/>
+          <rect x="10" y="8" width="140" height="287" rx="20" fill="#1a1a1a"/>
+          <image href="scoophoop-screen2.png" x="10" y="8" width="140" height="287" preserveAspectRatio="xMidYMid slice" clip-path="url(#shclip2)"/>
+          <rect x="56" y="287" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+      <div class="iphone">
+        <svg viewBox="0 0 160 290" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shframe3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient>
+            <clipPath id="shclip3"><rect x="10" y="8" width="140" height="272" rx="20"/></clipPath>
+          </defs>
+          <rect width="160" height="290" rx="26" fill="url(#shframe3)"/>
+          <rect x="10" y="8" width="140" height="272" rx="20" fill="#1a1a1a"/>
+          <image href="scoophoop-screen3.png" x="10" y="8" width="140" height="272" preserveAspectRatio="xMidYMid slice" clip-path="url(#shclip3)"/>
+          <rect x="56" y="272" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+          <rect x="-2" y="75" width="4" height="22" rx="2" fill="#1c1c1c"/>
+          <rect x="-2" y="103" width="4" height="32" rx="2" fill="#1c1c1c"/>
+          <rect x="158" y="90" width="4" height="36" rx="2" fill="#1c1c1c"/>
+        </svg>
+      </div>
+    </div>
+    <p class="app-description">My initial leap into independent gamedev, used as a working project and personal challenge to learn Unity development.</p>
+    <div class="app-highlights">
+      <div class="highlight">Self-taught Unity software and C# language by following online tutorials and documentation</div>
+      <div class="highlight">Produced MVP of mobile game in just 1 week by prioritising backlog for crucial usability elements and streamlining game flow</div>
+      <div class="highlight">Created a continuous game mechanic to improve user retention by researching UX and UI design and game psychology</div>
+      <div class="highlight">Featured on the Apple App Store 'Updated and Upgraded' section in over 10 countries - 5k downloads</div>
+    </div>
+    <div class="app-tags">
+      <span class="tag">C#</span>
+      <span class="tag">Unity</span>
+      <span class="tag">iOS & Android</span>
+    </div>
+  </div>
+
+</div><!-- /apps-grid -->
+
+<!-- ═══════════════════════════ PM APPROACH ═══════════════════════════ -->
+<div id="approach" class="pm-lens">
+  <h2 class="reveal">What shipping apps taught me about PM</h2>
+  <p class="subtitle reveal delay-1">LLessons from solo projects, from idea to publishing</p>
+  <div class="lens-grid">
+
+    <div class="lens-cell reveal delay-1">
+      <div class="icon-wrap"><span class="icon">🔬</span></div>
+      <h3>User feedback is always surprising</h3>
+      <p>Users know what they want better than you, so take feedback seriously but weigh it up against feasibility and timelines.</p>
+    </div>
+
+    <div class="lens-cell reveal delay-2">
+      <div class="icon-wrap"><span class="icon">📊</span></div>
+      <h3>Metrics Really Matter</h3>
+      <p>Chart topping apps are not there by accident, but are a result of behind the scenes retention, LTV, and engagement. Learning to track these metrics early and iterate is crucial.</p>
+    </div>
+
+    <div class="lens-cell reveal delay-5">
+      <div class="icon-wrap"><span class="icon">📣</span></div>
+      <h3>Storytelling & Distribution is how people find you</h3>
+      <p>It doesn't matter if your product is perfect if no-one will hear about it. I've learned to think about marketing angles from the very conception of the project to maximise coverage and featuring opportunities.</p>
+    </div>
+
+    <div class="lens-cell reveal delay-3">
+      <div class="icon-wrap"><span class="icon">🚀</span></div>
+      <h3>Deadlines are a must</h3>
+      <p>Idea to published app in 6 months really forces me to evaluate scope and prioritise the backlog, which has helped shape my instinct for criticality and feasibility of features.</p>
+    </div>
+
+    <!-- 5th cell: user-centric emoji changed to 👥 -->
+    <div class="lens-cell reveal delay-6">
+      <div class="icon-wrap"><span class="icon">👥</span></div>
+      <h3>You must always think about the user</h3>
+      <p>10 satisfied users are better than 100 who uninstall the next day, and users recognise features made with purpose.</p>
+    </div>
+
+    <div class="lens-cell reveal delay-4">
+      <div class="icon-wrap"><span class="icon">🤖</span></div>
+      <h3>AI can be a catalyst but not a replacement</h3>
+      <p>Building Dropletts with LLMs gave me first-hand insight into where AI genuinely accelerates delivery and where it falls short — increasingly relevant to every product team.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════ EXPERIENCE ═══════════════════════════ -->
+<div id="experience" class="professional">
+  <h2 class="reveal">Professional Experience</h2>
+  <p class="subtitle reveal delay-1">Senior PM in retail, ecommerce, and AdTech</p>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-logo">
+        <!--
+          TO ADD LOGO: replace placeholder div below with:
+          <div class="timeline-logo-wrap"><img src="waitrose-logo.png" alt="Waitrose"></div>
+          Recommended size: 200×200px PNG, squircle clip applied automatically.
+        -->
+        <div class="timeline-logo-wrap"><img src="waitrose-logo.png" alt="Waitrose"></div>
+      </div>
+      <div class="timeline-left">
+        <div class="company">Waitrose</div>
+        <div class="period">Nov 2023 – Present</div>
+      </div>
+      <div class="timeline-right">
+        <div class="title">Senior Product Manager - AdTech &amp; Product Data</div>
+        <div class="desc">
+          <span class="desc-intro">Leading multiple teams simultaneously as a Senior PM at Waitrose digital.</span>
+          <span class="desc-detail">Driving £15m+ retail media revenue, decommissioning legacy data system saving £10m in annual licence costs, and building an experimentation culture across search and advertising placements.</span>
+        </div>
+      </div>
+    </div>
+    <div class="timeline-item reveal delay-1">
+      <div class="timeline-logo">
+        <div class="timeline-logo-wrap"><img src="holland-barrett-logo.png" alt="Holland & Barrett"></div>
+      </div>
+      <div class="timeline-left">
+        <div class="company">Holland &amp; Barrett</div>
+        <div class="period">Nov 2021 – Nov 2023</div>
+      </div>
+      <div class="timeline-right">
+        <div class="title">Product Manager - PIM &amp; Product Data</div>
+        <div class="desc">
+          <span class="desc-intro">My first product manager role owning the full scope of the product and managing a developer team.</span>
+          <span class="desc-detail">Built and launched an internal PIM system from scratch in 9 months, reducing publishing time from 20 minutes to instant and saving £500k annually through legacy decommissioning.</span>
+        </div>
+      </div>
+    </div>
+    <div class="timeline-item reveal delay-2">
+      <div class="timeline-logo">
+        <div class="timeline-logo-wrap"><img src="accenture-logo.png" alt="Accenture"></div>
+      </div>
+      <div class="timeline-left">
+        <div class="company">Accenture</div>
+        <div class="period">Mar 2019 – Nov 2021</div>
+      </div>
+      <div class="timeline-right">
+        <div class="title">PIM Consultant</div>
+        <div class="desc">
+          <span class="desc-intro">Graduate role covering a number of projects where I first came across my love for product management.</span>
+          <span class="desc-detail">Configured bespoke Master Data Management software for a major retail client, reducing onboarding time by 15% and cutting data errors by 30% through automated validation.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer id="contact" class="reveal">
+  <div class="footer-left">
+    <h3>Get in touch.</h3>
+    <p>Open to exciting PM roles in data, AdTech, and consumer apps</p>
+  </div>
+  <div class="footer-right">
+    <a href="mailto:maciekzak96@gmail.com" class="contact-email">maciekzak96@gmail.com</a>
+    <a href="https://linkedin.com/in/maciek-zak" target="_blank" class="btn btn-primary"><span class="btn-inner">LinkedIn ↗</span></a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}, { passive: true });
+
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    entry.target.querySelectorAll('.underline-reveal').forEach(el => el.classList.add('visible'));
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+document.querySelectorAll('.reveal, .section-header, .app-card, .timeline-item, footer, .section-divider').forEach(el => revealObs.observe(el));
+
+const navObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    document.querySelectorAll('.nav-strip a').forEach(a => a.classList.remove('active'));
+    const link = document.querySelector(`.nav-strip a[data-section="${entry.target.id}"]`);
+    if (link) link.classList.add('active');
+  });
+}, { threshold: 0.3 });
+['apps','approach','experience','contact'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) navObs.observe(el);
+});
+</script>
+</body>
+</html>
